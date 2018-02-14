@@ -32,9 +32,10 @@ public class Entry {
     @Getter
     private LocalDateTime startRaceDateTime;
 
-//    @ManyToOne
-//    @JoinColumn(name="user_id", nullable = false)
-//    @Setter
-//    @Getter
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
+
+    public Entry() {
+    }
 }

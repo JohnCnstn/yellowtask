@@ -26,7 +26,7 @@ public class EntriesController {
 
     @GetMapping("/entries")
     public List<Entry> getAllEntries() {
-        return entryRepository.findAll();
+        return entryRepository.findAllByUserId(1);
     }
 
     @PostMapping("/entries")
