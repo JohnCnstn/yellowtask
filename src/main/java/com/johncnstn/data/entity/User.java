@@ -28,6 +28,6 @@ public class User {
     @Getter
     private String password;
 
-    @OneToMany(mappedBy="user")
-    private Set<Entry> entries;
+//    @OneToMany(mappedBy="user")
+//    private Set<Entry> entries;
 }

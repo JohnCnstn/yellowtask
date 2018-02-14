@@ -37,12 +37,11 @@ public class EntriesController {
         return entryService.save(entry, getPrincipal().getId());
     }
 
-//    done
-
     @GetMapping("/entries/{id}")
     public ResponseEntity<Entry> getEntryById(@PathVariable(value = "id") Long entryId) {
+
         Entry entry = entryRepository.findOne(entryId);
-        if(entry == null) {
+        if(entry == null || (getPrincipal().getId() != entry.getUser().getId())) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(entry);
@@ -52,7 +51,7 @@ public class EntriesController {
     public ResponseEntity<Entry> updateEntry(@PathVariable(value = "id") Long entryId,
                                            @Valid @RequestBody Entry entryDetails) {
         Entry entry = entryRepository.findOne(entryId);
-        if(entry == null) {
+        if(entry == null || (getPrincipal().getId() != entry.getUser().getId())) {
             return ResponseEntity.notFound().build();
         }
 
@@ -67,7 +66,7 @@ public class EntriesController {
     @DeleteMapping("/entries/{id}")
     public ResponseEntity<Entry> deleteEntry(@PathVariable(value = "id") Long entryId) {
         Entry entry = entryRepository.findOne(entryId);
-        if(entry == null) {
+        if(entry == null || (getPrincipal().getId() != entry.getUser().getId())) {
             return ResponseEntity.notFound().build();
         }
 
