@@ -1,10 +1,15 @@
 package com.johncnstn.controller;
 
+
+
+import com.johncnstn.data.detail.CustomUserDetail;
 import com.johncnstn.data.entity.Entry;
+import com.johncnstn.data.entity.User;
 import com.johncnstn.data.repository.EntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,15 +23,9 @@ public class EntriesController {
     @Autowired
     private EntryRepository entryRepository;
 
-    @GetMapping("/")
-    public String api() {
-        return "/api";
-    }
-
-
     @GetMapping("/entries")
     public List<Entry> getAllEntries() {
-        return entryRepository.findAllByUserId(1);
+        return entryRepository.findAllByUserId(getPrincipal().getId());
     }
 
     @PostMapping("/entries")
@@ -68,6 +67,11 @@ public class EntriesController {
 
         entryRepository.delete(entry);
         return ResponseEntity.ok().build();
+    }
+
+    private User getPrincipal(){
+        CustomUserDetail customUserDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return customUserDetail.getUser();
     }
 
 }
