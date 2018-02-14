@@ -10,5 +10,5 @@ import java.util.List;
 
 @Service
 public interface EntryService {
-    List<Entry> findAll();
+    Entry save(Entry entry, long userId);
 }

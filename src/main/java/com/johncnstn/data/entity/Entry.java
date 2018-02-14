@@ -34,6 +34,7 @@ public class Entry {
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
+    @Setter
     private User user;
 
     public Entry() {

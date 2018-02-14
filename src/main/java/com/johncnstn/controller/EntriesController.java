@@ -6,6 +6,7 @@ import com.johncnstn.data.detail.CustomUserDetail;
 import com.johncnstn.data.entity.Entry;
 import com.johncnstn.data.entity.User;
 import com.johncnstn.data.repository.EntryRepository;
+import com.johncnstn.data.service.EntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ public class EntriesController {
     @Autowired
     private EntryRepository entryRepository;
 
+    @Autowired
+    private EntryService entryService;
+
     @GetMapping("/entries")
     public List<Entry> getAllEntries() {
         return entryRepository.findAllByUserId(getPrincipal().getId());
@@ -30,8 +34,10 @@ public class EntriesController {
 
     @PostMapping("/entries")
     public Entry createEntry(@Valid @RequestBody Entry entry) {
-        return entryRepository.save(entry);
+        return entryService.save(entry, getPrincipal().getId());
     }
+
+//    done
 
     @GetMapping("/entries/{id}")
     public ResponseEntity<Entry> getEntryById(@PathVariable(value = "id") Long entryId) {
