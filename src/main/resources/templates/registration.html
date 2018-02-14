@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <title>Registration</title>
+</head>
+<body>
+<div class="container" align="center">
+    <h1>Registration</h1>
+    <div>
+        <form action="/registration" th:object="${user}" method="POST" enctype="utf8">
+            <label>Username</label>
+            <input th:field="*{userName}"/>
+            <p th:each="error: ${#fields.errors('userName')}"
+               th:text="${error}">Validation error</p><br/>
+            <label>Password</label>
+            <input type="password" th:field="*{password}"/>
+            <p th:each="error : ${#fields.errors('password')}"
+               th:text="${error}">Validation error</p><br/>
+            <div>
+                <input type="submit" value="Register"/>
+            </div>
+            <div>
+                <a th:href="@{/}">Login?</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
