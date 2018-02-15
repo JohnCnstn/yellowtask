@@ -1,1 +1,1 @@
-web: java -jar YellowApp-spring-boot.jar
+web: java -jar target/YellowApp-spring-boot.jar
