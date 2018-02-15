@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/YellowSoft.jar
+web: java -Dserver.port=8080 -jar target/YellowApp.jar
