@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public User findOne(long id) {
+        return userRepository.findOne(id);
+    }
+
     @Transactional
     public User registerNewUserAccount(UserDto userDto) throws UsernameExistsException {
 

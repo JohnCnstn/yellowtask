@@ -1,16 +1,16 @@
 package com.johncnstn.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Data
-@Table(name = "user")
-public class User {
+@Table(name = "image")
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -18,14 +18,14 @@ public class User {
     @Getter
     private long id;
 
-    @Column(name = "userName")
+    @Column(name = "imgURL")
     @Setter
     @Getter
-    private String userName;
+    private String imgURL;
 
-    @Column(name = "password")
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
     @Setter
     @Getter
-    private String password;
-
+    private User user;
 }

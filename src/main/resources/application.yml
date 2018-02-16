@@ -1,0 +1,5 @@
+amazonProperties:
+  endpointUrl: https://944457942970.signin.aws.amazon.com/console
+  accessKey: AKIAJIKPPKL6GW7LSVLA
+  secretKey: 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
+  bucketName: yellow-task

@@ -7,7 +7,7 @@ public class AccountCredentials {
 
     @Getter
     @Setter
-    private String username;
+    private String userName;
     @Getter
     @Setter
     private String password;

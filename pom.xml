@@ -81,6 +81,12 @@
             <version>0.7.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.11.133</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -97,6 +103,11 @@
             <plugin>
                 <groupId>com.heroku.sdk</groupId>
                 <artifactId>heroku-maven-plugin</artifactId>
+                <configuration>
+                    <processTypes>
+                        <web>java $JAVA_OPTS -cp target/classes:target/dependency/* com.johncnstn.StartApp</web>
+                    </processTypes>
+                </configuration>
                 <version>2.0.3</version>
             </plugin>
 

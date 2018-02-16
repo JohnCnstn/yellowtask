@@ -6,6 +6,7 @@ import com.johncnstn.data.detail.CustomUserDetail;
 import com.johncnstn.data.entity.Entry;
 import com.johncnstn.data.entity.User;
 import com.johncnstn.data.repository.EntryRepository;
+import com.johncnstn.data.repository.UserRepository;
 import com.johncnstn.data.service.EntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +24,10 @@ public class EntriesController {
     @Qualifier("entryRepository")
     @Autowired
     private EntryRepository entryRepository;
+
+    @Qualifier("userRepository")
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private EntryService entryService;
@@ -75,8 +80,7 @@ public class EntriesController {
     }
 
     private User getPrincipal(){
-        CustomUserDetail customUserDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return customUserDetail.getUser();
+        return userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 }
