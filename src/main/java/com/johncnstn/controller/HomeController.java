@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Date;
@@ -29,10 +30,10 @@ public class HomeController {
         //dummy rates
         List<CurrencyRate> currencyRates = new ArrayList<>();
         Date today = new Date();
-        List<Currency> currencies = new ArrayList<>(Currency.getAvailableCurrencies());
 
         CurrencyRate cr = new CurrencyRate();
         cr.setDate(today);
+        cr.setAvgSpeed(BigDecimal.valueOf(14.01));
 
         currencyRates.add(cr);
 

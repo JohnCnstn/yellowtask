@@ -9,6 +9,7 @@
               uuid="3737c8f8-35e7-4ea0-bf9f-c557f6bbbdf3">
 
     <field name="date" class="java.util.Date"/>
+    <field name="avgSpeed" class="java.math.BigDecimal"/>
 
     <columnHeader>
         <band height = "50">
@@ -19,12 +20,18 @@
                 </textElement>
                 <text><![CDATA[Date]]></text>
             </staticText>
+            <staticText>
+                <reportElement x = "240" y = "0" width = "120" height = "50" />
+                <textElement verticalAlignment = "Middle">
+                    <font size="16" isBold = "true" />
+                </textElement>
+                <text><![CDATA[Average Speed]]></text>
+            </staticText>
         </band>
     </columnHeader>
 
     <detail>
         <band height="25">
-
             <textField pattern="dd.MM.yyyy">
                 <reportElement x="120" y="0" width="120" height="25"/>
                 <textElement>
@@ -32,6 +39,15 @@
                 </textElement>
                 <textFieldExpression class="java.util.Date">
                     <![CDATA[$F{date}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="#,##0.00">
+                <reportElement x="240" y="0" width="120" height="25"/>
+                <textElement>
+                    <font size="14" />
+                </textElement>
+                <textFieldExpression class="java.math.BigDecimal">
+                    <![CDATA[$F{avgSpeed}]]></textFieldExpression>
             </textField>
 
         </band>
