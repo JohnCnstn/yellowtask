@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Time;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
@@ -26,7 +26,7 @@ public class Entry {
     @Column(name = "raceTime")
     @Setter
     @Getter
-    private Time raceTime;
+    private Date raceTime;
 
     @Column(name = "startRaceDateTime")
     @Setter

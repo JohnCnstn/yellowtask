@@ -1,17 +1,25 @@
 package com.johncnstn.model;
 
 import com.johncnstn.data.entity.Entry;
+import com.johncnstn.data.entity.User;
 import com.johncnstn.data.repository.EntryRepository;
 import com.johncnstn.report.CurrencyRate;
-import com.johncnstn.data.entity.User;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class DataToCurrencyRate {
@@ -72,26 +80,64 @@ public class DataToCurrencyRate {
             }
         }
 
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        String weekData = formatter.format(dateOfMonday);
+        weekData += " " + formatter.format(dateOfSunday);
+
+//        String weekData = dateOfMonday.toString() + dateOfSunday.toString();
+
         for (Entry entry : allEntriesOfTheWeek) {
             allUsersEntries.remove(entry);
         }
 
-        setDataForReport(allEntriesOfTheWeek, calendar);
+//          setDataForReport(allEntriesOfTheWeek, calendar, weekData);
+        reportDataWriter(allEntriesOfTheWeek, calendar, weekData);
 
         return allEntriesOfTheWeek;
 
     }
 
-    private void setDataForReport(List<Entry> allEntriesOfTheWeek, Calendar calendar) {
+//    private void setDataForReport(List<Entry> allEntriesOfTheWeek, Calendar calendar, String weekData) {
+//
+//        int totalDistance = 0;
+//        long totalTime = 0;
+//        int amountOfEntries = 0;
+//        for (Entry entry : allEntriesOfTheWeek) {
+//            totalDistance += entry.getDistance();
+//            Time localTime = entry.getRaceTime();
+//            totalTime += localTime.getTime();
+//            amountOfEntries++;
+//        }
+//        totalTime = totalTime/amountOfEntries;
+//        String formattedDuration = DurationFormatUtils.formatDurationHMS(totalTime);
+//        System.out.println(String.format("%02d:%02d:%02d",
+//                TimeUnit.MILLISECONDS.toHours(totalTime),
+//                TimeUnit.MILLISECONDS.toMinutes(totalTime) -
+//                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(totalTime)), // The change is in this line
+//                TimeUnit.MILLISECONDS.toSeconds(totalTime) -
+//                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totalTime))));
+//
+//        weekData += " " + calendar.get(Calendar.WEEK_OF_YEAR);
+//        currencyRate.setWeek(weekData);
+//        currencyRate.setAvgTime(formattedDuration);
+//        currencyRate.setTotalDistance(totalDistance);
+//
+//    }
 
-        int totalDistance = 0;
 
+    private void reportDataWriter(List<Entry> allEntriesOfTheWeek, Calendar calendar, String weekData) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+        long result = 0;
         for (Entry entry : allEntriesOfTheWeek) {
-            totalDistance += entry.getDistance();
+            ZonedDateTime zonedDateTime = entry.getRaceTime().toInstant().atZone(ZoneId.of("GMT"));
+            long seconds = zonedDateTime.toInstant().getEpochSecond();
+            System.out.println(seconds);
+            Date date = new Date(seconds * 1000L);
+          System.out.println(simpleDateFormat.format(date));
+           result += seconds;
         }
-
-        currencyRate.setWeek(calendar.get(Calendar.WEEK_OF_YEAR));
-        currencyRate.setTotalDistance(totalDistance);
-
-    }
+        Date resultDate = new Date(result * 1000L);
+      System.out.println(simpleDateFormat.format(resultDate));
+  }
 }

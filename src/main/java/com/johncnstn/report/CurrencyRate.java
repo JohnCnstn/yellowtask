@@ -5,17 +5,18 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.Date;
 
 @Component
 public class CurrencyRate {
     @Setter
     @Getter
-    private Date date;
+    private Double avgSpeed;
 
     @Setter
     @Getter
-    private BigDecimal avgSpeed;
+    private String avgTime;
 
     @Setter
     @Getter
@@ -23,5 +24,5 @@ public class CurrencyRate {
 
     @Setter
     @Getter
-    private int week;
+    private String week;
 }
