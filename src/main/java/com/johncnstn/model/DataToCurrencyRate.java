@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -85,59 +86,47 @@ public class DataToCurrencyRate {
         String weekData = formatter.format(dateOfMonday);
         weekData += " " + formatter.format(dateOfSunday);
 
-//        String weekData = dateOfMonday.toString() + dateOfSunday.toString();
-
         for (Entry entry : allEntriesOfTheWeek) {
             allUsersEntries.remove(entry);
         }
 
-//          setDataForReport(allEntriesOfTheWeek, calendar, weekData);
-        reportDataWriter(allEntriesOfTheWeek, calendar, weekData);
+        setDataForReport(allEntriesOfTheWeek, calendar, weekData);
 
         return allEntriesOfTheWeek;
 
     }
 
-//    private void setDataForReport(List<Entry> allEntriesOfTheWeek, Calendar calendar, String weekData) {
-//
-//        int totalDistance = 0;
-//        long totalTime = 0;
-//        int amountOfEntries = 0;
-//        for (Entry entry : allEntriesOfTheWeek) {
-//            totalDistance += entry.getDistance();
-//            Time localTime = entry.getRaceTime();
-//            totalTime += localTime.getTime();
-//            amountOfEntries++;
-//        }
-//        totalTime = totalTime/amountOfEntries;
-//        String formattedDuration = DurationFormatUtils.formatDurationHMS(totalTime);
-//        System.out.println(String.format("%02d:%02d:%02d",
-//                TimeUnit.MILLISECONDS.toHours(totalTime),
-//                TimeUnit.MILLISECONDS.toMinutes(totalTime) -
-//                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(totalTime)), // The change is in this line
-//                TimeUnit.MILLISECONDS.toSeconds(totalTime) -
-//                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totalTime))));
-//
-//        weekData += " " + calendar.get(Calendar.WEEK_OF_YEAR);
-//        currencyRate.setWeek(weekData);
-//        currencyRate.setAvgTime(formattedDuration);
-//        currencyRate.setTotalDistance(totalDistance);
-//
-//    }
+    private void setDataForReport(List<Entry> allEntriesOfTheWeek, Calendar calendar, String weekData) {
 
-
-    private void reportDataWriter(List<Entry> allEntriesOfTheWeek, Calendar calendar, String weekData) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
-        long result = 0;
+        int totalDistance = 0;
+        long totalTime = 0;
+        int amountOfEntries = 0;
         for (Entry entry : allEntriesOfTheWeek) {
-            ZonedDateTime zonedDateTime = entry.getRaceTime().toInstant().atZone(ZoneId.of("GMT"));
-            long seconds = zonedDateTime.toInstant().getEpochSecond();
-            System.out.println(seconds);
-            Date date = new Date(seconds * 1000L);
-          System.out.println(simpleDateFormat.format(date));
-           result += seconds;
+            totalDistance += entry.getDistance();
+            LocalTime localTime = entry.getRaceTime().toLocalTime();
+
+            totalTime += parseLocalTimeToMS(localTime);
+
+            amountOfEntries++;
         }
-        Date resultDate = new Date(result * 1000L);
-      System.out.println(simpleDateFormat.format(resultDate));
-  }
+        totalTime = totalTime / amountOfEntries;
+
+        String formattedDuration = String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(totalTime),
+                TimeUnit.MILLISECONDS.toMinutes(totalTime) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(totalTime)),
+                TimeUnit.MILLISECONDS.toSeconds(totalTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totalTime)));
+
+
+        weekData += " " + calendar.get(Calendar.WEEK_OF_YEAR);
+        currencyRate.setWeek(weekData);
+        currencyRate.setAvgTime(formattedDuration);
+        currencyRate.setTotalDistance(totalDistance);
+
+    }
+
+    private long parseLocalTimeToMS(LocalTime localTime) {
+        return ((localTime.getHour() * 60 * 60) + (localTime.getMinute() * 60) + localTime.getSecond()) * 1000;
+    }
 }

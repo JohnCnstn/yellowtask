@@ -26,7 +26,7 @@ public class Entry {
     @Column(name = "raceTime")
     @Setter
     @Getter
-    private Date raceTime;
+    private Time raceTime;
 
     @Column(name = "startRaceDateTime")
     @Setter
