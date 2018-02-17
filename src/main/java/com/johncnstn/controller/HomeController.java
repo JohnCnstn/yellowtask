@@ -1,7 +1,15 @@
 package com.johncnstn.controller;
 
 import com.johncnstn.data.entity.Entry;
+import com.johncnstn.data.entity.User;
+import com.johncnstn.data.repository.EntryRepository;
+import com.johncnstn.data.repository.UserRepository;
+import com.johncnstn.data.service.EntryService;
+import com.johncnstn.model.DataToCurrencyRate;
 import com.johncnstn.report.CurrencyRate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +22,18 @@ import java.util.List;
 
 @Controller
 public class HomeController {
+
+    @Autowired
+    private DataToCurrencyRate dataToCurrencyRate;
+
+    @Qualifier("userRepository")
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Qualifier("entryRepository")
+    @Autowired
+    private EntryRepository entryRepository;
 
     @GetMapping("/home")
     public String home() {
@@ -29,21 +49,23 @@ public class HomeController {
     private List<CurrencyRate> getTodayForexRates() {
         //dummy rates
         List<CurrencyRate> currencyRates = new ArrayList<>();
-        Date today = new Date();
+
+        List<Entry> entryList = entryRepository.findAllByUserId(getPrincipal().getId());
 
         CurrencyRate cr = new CurrencyRate();
-        cr.setDate(today);
-        cr.setAvgSpeed(BigDecimal.valueOf(14.01));
+
+        for (Entry entry : entryList) {
+            cr = dataToCurrencyRate.da(getPrincipal());
+        }
 
         currencyRates.add(cr);
 
-//        for (int i = 0; i < currencies.size(); i += 2) {
-//            CurrencyRate cr = new CurrencyRate();
-//            cr.setDate(today);
-//
-//            currencyRates.add(cr);
-//        }
         return currencyRates;
+    }
+
+
+    private User getPrincipal(){
+        return userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "entry")
@@ -30,7 +31,7 @@ public class Entry {
     @Column(name = "startRaceDateTime")
     @Setter
     @Getter
-    private LocalDateTime startRaceDateTime;
+    private Date startRaceDateTime;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)

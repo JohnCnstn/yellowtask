@@ -2,7 +2,6 @@ package com.johncnstn.controller;
 
 
 
-import com.johncnstn.data.detail.CustomUserDetail;
 import com.johncnstn.data.entity.Entry;
 import com.johncnstn.data.entity.User;
 import com.johncnstn.data.repository.EntryRepository;

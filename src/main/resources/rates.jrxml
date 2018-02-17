@@ -8,48 +8,82 @@
               topMargin="20" bottomMargin="20"
               uuid="3737c8f8-35e7-4ea0-bf9f-c557f6bbbdf3">
 
-    <field name="date" class="java.util.Date"/>
-    <field name="avgSpeed" class="java.math.BigDecimal"/>
+    <field name="week" class="java.lang.Integer"/>
+    <field name="avgSpeed" class="java.lang.Integer"/>
+    <field name="totalDistance" class="java.lang.Integer"/>
 
     <columnHeader>
         <band height = "50">
+
+            <staticText>
+                <reportElement x = "0" y = "0" width = "120" height = "50" />
+                <textElement verticalAlignment = "Middle">
+                    <font size="16" isBold = "true" />
+                </textElement>
+                <text><![CDATA[Week]]></text>
+            </staticText>
+
             <staticText>
                 <reportElement x = "120" y = "0" width = "120" height = "50" />
                 <textElement verticalAlignment = "Middle">
                     <font size="16" isBold = "true" />
                 </textElement>
-                <text><![CDATA[Date]]></text>
+                <text><![CDATA[Total Distance]]></text>
             </staticText>
-            <staticText>
-                <reportElement x = "240" y = "0" width = "120" height = "50" />
-                <textElement verticalAlignment = "Middle">
-                    <font size="16" isBold = "true" />
-                </textElement>
-                <text><![CDATA[Average Speed]]></text>
-            </staticText>
+
+            <!--<staticText>-->
+                <!--<reportElement x = "240" y = "0" width = "120" height = "50" />-->
+                <!--<textElement verticalAlignment = "Middle">-->
+                    <!--<font size="16" isBold = "true" />-->
+                <!--</textElement>-->
+                <!--<text><![CDATA[Ask Price]]></text>-->
+            <!--</staticText>-->
+            <!--<staticText>-->
+                <!--<reportElement x = "360" y = "0" width = "120" height = "50" />-->
+                <!--<textElement verticalAlignment = "Middle">-->
+                    <!--<font size="16" isBold = "true" />-->
+                <!--</textElement>-->
+                <!--<text><![CDATA[Bid Price]]></text>-->
+            <!--</staticText>-->
         </band>
     </columnHeader>
 
     <detail>
         <band height="25">
-            <textField pattern="dd.MM.yyyy">
+            <textField>
+                <reportElement x="0" y="0" width="120" height="25"/>
+                <textElement>
+                    <font size="14" />
+                </textElement>
+                <textFieldExpression class="java.lang.Long">
+                    <![CDATA[$F{week}]]></textFieldExpression>
+            </textField>
+
+            <textField>
                 <reportElement x="120" y="0" width="120" height="25"/>
                 <textElement>
                     <font size="14" />
                 </textElement>
-                <textFieldExpression class="java.util.Date">
-                    <![CDATA[$F{date}]]></textFieldExpression>
+                <textFieldExpression class="java.lang.Long">
+                    <![CDATA[$F{totalDistance}]]></textFieldExpression>
             </textField>
 
-            <textField pattern="#,##0.00">
-                <reportElement x="240" y="0" width="120" height="25"/>
-                <textElement>
-                    <font size="14" />
-                </textElement>
-                <textFieldExpression class="java.math.BigDecimal">
-                    <![CDATA[$F{avgSpeed}]]></textFieldExpression>
-            </textField>
-
+            <!--<textField pattern="#,##0.00">-->
+                <!--<reportElement x="240" y="0" width="120" height="25"/>-->
+                <!--<textElement>-->
+                    <!--<font size="14" />-->
+                <!--</textElement>-->
+                <!--<textFieldExpression class="java.math.BigDecimal">-->
+                    <!--<![CDATA[$F{askPrice}]]></textFieldExpression>-->
+            <!--</textField>-->
+            <!--<textField pattern="#,##0.00">-->
+                <!--<reportElement x="360" y="0" width="120" height="25"/>-->
+                <!--<textElement>-->
+                    <!--<font size="14" />-->
+                <!--</textElement>-->
+                <!--<textFieldExpression class="java.math.BigDecimal">-->
+                    <!--<![CDATA[$F{bidPrice}]]></textFieldExpression>-->
+            <!--</textField>-->
         </band>
     </detail>
 </jasperReport>
