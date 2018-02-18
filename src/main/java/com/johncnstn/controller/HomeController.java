@@ -9,51 +9,23 @@ import com.johncnstn.model.DataToCurrencyRate;
 import com.johncnstn.report.CurrencyRate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.*;
 
 @Controller
 public class HomeController {
-
-    @Autowired
-    private DataToCurrencyRate dataToCurrencyRate;
-
-    @Qualifier("userRepository")
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Qualifier("entryRepository")
-    @Autowired
-    private EntryRepository entryRepository;
-
     @GetMapping("/home")
     public String home() {
         return "/home";
-    }
-
-    @GetMapping("/exchangeRates")
-    public String handleForexRequest(Model model) {
-        model.addAttribute("todayCurrencyRates", getTodayForexRates());
-        return "forexView";
-    }
-
-    private List<CurrencyRate> getTodayForexRates() {
-        //dummy rates
-
-        List<Entry> entryList = entryRepository.findAllByUserId(getPrincipal().getId());
-
-        return dataToCurrencyRate.da(entryList);
-    }
-
-
-    private User getPrincipal() {
-        return userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 }

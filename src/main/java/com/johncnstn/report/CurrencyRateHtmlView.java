@@ -37,7 +37,7 @@ public class CurrencyRateHtmlView extends AbstractView {
 
         exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
         exporter.setExporterOutput(
-                new SimpleWriterExporterOutput("employeeReport.csv"));
+                new SimpleWriterExporterOutput(response.getWriter()));
 
         exporter.exportReport();
 
