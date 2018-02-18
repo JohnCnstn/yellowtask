@@ -15,10 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class HomeController {
@@ -48,23 +45,14 @@ public class HomeController {
 
     private List<CurrencyRate> getTodayForexRates() {
         //dummy rates
-        List<CurrencyRate> currencyRates = new ArrayList<>();
 
         List<Entry> entryList = entryRepository.findAllByUserId(getPrincipal().getId());
 
-        CurrencyRate cr = new CurrencyRate();
-
-        for (Entry entry : entryList) {
-            cr = dataToCurrencyRate.da(getPrincipal());
-        }
-
-        currencyRates.add(cr);
-
-        return currencyRates;
+        return dataToCurrencyRate.da(entryList);
     }
 
 
-    private User getPrincipal(){
+    private User getPrincipal() {
         return userRepository.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
