@@ -1,24 +1,16 @@
 package com.johncnstn.model;
 
 import com.johncnstn.data.entity.Entry;
-import com.johncnstn.data.entity.User;
-import com.johncnstn.data.repository.EntryRepository;
 import com.johncnstn.report.CurrencyRate;
-import org.apache.commons.lang.time.DurationFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class DataToCurrencyRate {
