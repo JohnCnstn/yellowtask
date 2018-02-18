@@ -5,43 +5,33 @@ import com.johncnstn.data.entity.User;
 import com.johncnstn.data.service.UserService;
 import com.johncnstn.exception.UsernameExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@RestController
 @Controller
 public class RegistrationController {
 
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String showRegistrationForm(Model model) {
-        UserDto userDto = new UserDto();
-        model.addAttribute("user", userDto);
-        return "registration";
-    }
+    @PostMapping(value = "/registration")
+    public ResponseEntity<User> registerUserAccount(@Valid @RequestBody UserDto userDto) {
+        User user = createUserAccount(userDto);
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registerUserAccount(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result) {
-
-        if (!result.hasErrors()) {
-            createUserAccount(userDto, result);
-        }
-
-        if (result.hasErrors()) {
-            return "registration";
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
-            return "redirect:/login";
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
     }
 
-        private User createUserAccount(UserDto accountDto, BindingResult result) {
+        private User createUserAccount(UserDto accountDto) {
         User registered;
         try {
             registered = userService.registerNewUserAccount(accountDto);
