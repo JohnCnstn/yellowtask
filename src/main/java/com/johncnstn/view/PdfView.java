@@ -4,7 +4,6 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.johncnstn.data.entity.User;
 import com.johncnstn.report.CurrencyRate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,10 +16,10 @@ public class PdfView extends AbstractPdfView {
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
         // change the file name
-        response.setHeader("Content-Disposition", "attachment; filename=\"all-users.pdf\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"report.pdf\"");
 
         List<CurrencyRate> currencyRateList = (List<CurrencyRate>) model.get("todayCurrencyRates");
-        document.add(new Paragraph("Generated Users " + LocalDate.now()));
+        document.add(new Paragraph("Generated Report " + LocalDate.now()));
 
         PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100.0f);
@@ -36,16 +35,16 @@ public class PdfView extends AbstractPdfView {
         cell.setPadding(5);
 
         // write table header
-        cell.setPhrase(new Phrase("Username", font));
+        cell.setPhrase(new Phrase("Week", font));
         table.addCell(cell);
 
-        cell.setPhrase(new Phrase("First Name", font));
+        cell.setPhrase(new Phrase("Total Distance", font));
         table.addCell(cell);
 
-        cell.setPhrase(new Phrase("Last Name", font));
+        cell.setPhrase(new Phrase("Average Time", font));
         table.addCell(cell);
 
-        cell.setPhrase(new Phrase("Email", font));
+        cell.setPhrase(new Phrase("Average Speed", font));
         table.addCell(cell);
 
         for(CurrencyRate currencyRate : currencyRateList){
