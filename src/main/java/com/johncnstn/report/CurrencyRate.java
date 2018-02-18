@@ -12,7 +12,7 @@ import java.util.Date;
 public class CurrencyRate {
     @Setter
     @Getter
-    private Double avgSpeed;
+    private String avgSpeed;
 
     @Setter
     @Getter

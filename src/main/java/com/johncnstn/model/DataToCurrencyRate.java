@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Time;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -100,6 +101,7 @@ public class DataToCurrencyRate {
 
         int totalDistance = 0;
         long totalTime = 0;
+        double avgSpeed;
         int amountOfEntries = 0;
         for (Entry entry : allEntriesOfTheWeek) {
             totalDistance += entry.getDistance();
@@ -109,19 +111,27 @@ public class DataToCurrencyRate {
 
             amountOfEntries++;
         }
-        totalTime = totalTime / amountOfEntries;
+
+        avgSpeed = (1.0 * totalDistance) / (amountOfEntries * totalTime / 1000);
+
+        String parsedSpeed = new DecimalFormat("#0.00").format(avgSpeed);
+
+        System.out.println(parsedSpeed);
+
+        long avgTime = totalTime / amountOfEntries;
 
         String formattedDuration = String.format("%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(totalTime),
-                TimeUnit.MILLISECONDS.toMinutes(totalTime) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(totalTime)),
-                TimeUnit.MILLISECONDS.toSeconds(totalTime) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(totalTime)));
+                TimeUnit.MILLISECONDS.toHours(avgTime),
+                TimeUnit.MILLISECONDS.toMinutes(avgTime) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(avgTime)),
+                TimeUnit.MILLISECONDS.toSeconds(avgTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(avgTime)));
 
 
         weekData += " " + calendar.get(Calendar.WEEK_OF_YEAR);
         currencyRate.setWeek(weekData);
         currencyRate.setAvgTime(formattedDuration);
+        currencyRate.setAvgSpeed(parsedSpeed);
         currencyRate.setTotalDistance(totalDistance);
 
     }
