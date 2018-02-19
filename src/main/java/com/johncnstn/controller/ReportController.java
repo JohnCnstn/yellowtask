@@ -4,7 +4,7 @@ import com.johncnstn.data.entity.Entry;
 import com.johncnstn.data.entity.User;
 import com.johncnstn.data.repository.EntryRepository;
 import com.johncnstn.data.repository.UserRepository;
-import com.johncnstn.model.ParseDataToRunReport;
+import com.johncnstn.report.ParseDataToRunReport;
 import com.johncnstn.report.RunReportList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

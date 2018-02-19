@@ -1,8 +1,6 @@
-package com.johncnstn.model;
+package com.johncnstn.report;
 
 import com.johncnstn.data.entity.Entry;
-import com.johncnstn.report.RunReport;
-import com.johncnstn.report.RunReportList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +21,8 @@ public class ParseDataToRunReport {
 
         runReportList.getRunReportList().clear();
 
-        Iterator<Entry> crunchifyIterator = allUsersEntries.iterator();
-        while (crunchifyIterator.hasNext()) {
+        Iterator<Entry> entryIterator = allUsersEntries.iterator();
+        while (entryIterator.hasNext()) {
             getAllEntriesOfWeek(allUsersEntries);
         }
 
@@ -33,24 +31,16 @@ public class ParseDataToRunReport {
 
     private List<Entry> getAllEntriesOfWeek(List<Entry> allUsersEntries) {
 
-        Calendar calendar = Calendar.getInstance();
-
         List<Entry> allEntriesOfTheWeek = new ArrayList<>();
 
+        Calendar calendar = Calendar.getInstance();
         calendar.setTime(allUsersEntries.get(0).getStartRaceDateTime());
-
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
         Date dateOfMonday = calendar.getTime();
         calendar.add(Calendar.DAY_OF_WEEK, 7);
         Date dateOfSunday = calendar.getTime();
 
-        for (Entry entry : allUsersEntries) {
-            if ((entry.getStartRaceDateTime().after(dateOfMonday) &&
-                    (entry.getStartRaceDateTime().before(dateOfSunday)))) {
-                allEntriesOfTheWeek.add(entry);
-            }
-        }
+        checkIfEntriesInTheSameWeek(allUsersEntries, allEntriesOfTheWeek, dateOfMonday, dateOfSunday);
 
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -59,24 +49,23 @@ public class ParseDataToRunReport {
 
         allUsersEntries.removeAll(allEntriesOfTheWeek);
 
-        setDataForReport(allEntriesOfTheWeek, calendar, weekData);
+        calculateDataForReport(allEntriesOfTheWeek, calendar, weekData);
 
         return allEntriesOfTheWeek;
 
     }
 
-    private void setDataForReport(List<Entry> allEntriesOfTheWeek, Calendar calendar, String weekData) {
+    private void calculateDataForReport(List<Entry> allEntriesOfTheWeek, Calendar calendar, String weekData) {
 
         int totalDistance = 0;
         long totalTime = 0;
         double avgSpeed;
         int amountOfEntries = 0;
+
         for (Entry entry : allEntriesOfTheWeek) {
             totalDistance += entry.getDistance();
             LocalTime localTime = entry.getRaceTime().toLocalTime();
-
             totalTime += parseLocalTimeToMS(localTime);
-
             amountOfEntries++;
         }
 
@@ -86,23 +75,38 @@ public class ParseDataToRunReport {
 
         long avgTime = totalTime / amountOfEntries;
 
-        String formattedDuration = String.format("%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(avgTime),
-                TimeUnit.MILLISECONDS.toMinutes(avgTime) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(avgTime)),
-                TimeUnit.MILLISECONDS.toSeconds(avgTime) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(avgTime)));
-
+        String formattedDuration = formatTime(avgTime);
 
         weekData = calendar.get(Calendar.WEEK_OF_YEAR) + " " + "(" + weekData + ")";
 
+        runReportList.getRunReportList().add(setDataForReport(weekData, formattedDuration, parsedSpeed, totalDistance));
+    }
+
+    private void checkIfEntriesInTheSameWeek(List<Entry> allUsersEntries, List<Entry> allEntriesOfTheWeek, Date dateOfMonday, Date dateOfSunday) {
+        for (Entry entry : allUsersEntries) {
+            if ((entry.getStartRaceDateTime().after(dateOfMonday) &&
+                    (entry.getStartRaceDateTime().before(dateOfSunday)))) {
+                allEntriesOfTheWeek.add(entry);
+            }
+        }
+    }
+
+    private RunReport setDataForReport(String weekData, String formattedDuration, String parsedSpeed, int totalDistance) {
         RunReport runReport = new RunReport();
         runReport.setWeek(weekData);
         runReport.setAvgTime(formattedDuration);
         runReport.setAvgSpeed(parsedSpeed);
         runReport.setTotalDistance(totalDistance);
+        return runReport;
+    }
 
-        runReportList.getRunReportList().add(runReport);
+    private String formatTime(long avgTime) {
+        return String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(avgTime),
+                TimeUnit.MILLISECONDS.toMinutes(avgTime) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(avgTime)),
+                TimeUnit.MILLISECONDS.toSeconds(avgTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(avgTime)));
     }
 
     private long parseLocalTimeToMS(LocalTime localTime) {
