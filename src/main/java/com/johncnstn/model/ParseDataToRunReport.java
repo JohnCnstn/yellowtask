@@ -1,7 +1,8 @@
 package com.johncnstn.model;
 
 import com.johncnstn.data.entity.Entry;
-import com.johncnstn.report.CurrencyRate;
+import com.johncnstn.report.RunReport;
+import com.johncnstn.report.RunReportList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,19 +14,21 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class DataToCurrencyRate {
+public class ParseDataToRunReport {
 
     @Autowired
-    private List<CurrencyRate> currencyRateList;
+    private RunReportList runReportList;
 
-    public List<CurrencyRate> da(List<Entry> allUsersEntries) {
+    public RunReportList setRunReport(List<Entry> allUsersEntries) {
+
+        runReportList.getRunReportList().clear();
 
         Iterator<Entry> crunchifyIterator = allUsersEntries.iterator();
         while (crunchifyIterator.hasNext()) {
             getAllEntriesOfWeek(allUsersEntries);
         }
 
-        return currencyRateList;
+        return runReportList;
     }
 
     private List<Entry> getAllEntriesOfWeek(List<Entry> allUsersEntries) {
@@ -81,8 +84,6 @@ public class DataToCurrencyRate {
 
         String parsedSpeed = new DecimalFormat("#0.00").format(avgSpeed);
 
-        System.out.println(parsedSpeed);
-
         long avgTime = totalTime / amountOfEntries;
 
         String formattedDuration = String.format("%02d:%02d:%02d",
@@ -93,14 +94,15 @@ public class DataToCurrencyRate {
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(avgTime)));
 
 
-        weekData += " " + calendar.get(Calendar.WEEK_OF_YEAR);
+        weekData = calendar.get(Calendar.WEEK_OF_YEAR) + " " + "(" + weekData + ")";
 
-        CurrencyRate currencyRate = new CurrencyRate();
-        currencyRate.setWeek(weekData);
-        currencyRate.setAvgTime(formattedDuration);
-        currencyRate.setAvgSpeed(parsedSpeed);
-        currencyRate.setTotalDistance(totalDistance);
-        currencyRateList.add(currencyRate);
+        RunReport runReport = new RunReport();
+        runReport.setWeek(weekData);
+        runReport.setAvgTime(formattedDuration);
+        runReport.setAvgSpeed(parsedSpeed);
+        runReport.setTotalDistance(totalDistance);
+
+        runReportList.getRunReportList().add(runReport);
     }
 
     private long parseLocalTimeToMS(LocalTime localTime) {

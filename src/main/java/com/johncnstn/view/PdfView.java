@@ -4,12 +4,12 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.johncnstn.report.CurrencyRate;
+import com.johncnstn.report.RunReport;
+import com.johncnstn.report.RunReportList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 public class PdfView extends AbstractPdfView {
@@ -18,7 +18,7 @@ public class PdfView extends AbstractPdfView {
         // change the file name
         response.setHeader("Content-Disposition", "attachment; filename=\"report.pdf\"");
 
-        List<CurrencyRate> currencyRateList = (List<CurrencyRate>) model.get("todayCurrencyRates");
+        RunReportList runReportList = (RunReportList) model.get("runReportList");
         document.add(new Paragraph("Generated Report " + LocalDate.now()));
 
         PdfPTable table = new PdfPTable(4);
@@ -47,11 +47,11 @@ public class PdfView extends AbstractPdfView {
         cell.setPhrase(new Phrase("Average Speed", font));
         table.addCell(cell);
 
-        for(CurrencyRate currencyRate : currencyRateList){
-            table.addCell(currencyRate.getWeek());
-            table.addCell(String.valueOf(currencyRate.getTotalDistance()));
-            table.addCell(currencyRate.getAvgTime());
-            table.addCell(currencyRate.getAvgSpeed());
+        for(RunReport runReport : runReportList.getRunReportList()){
+            table.addCell(runReport.getWeek());
+            table.addCell(String.valueOf(runReport.getTotalDistance()));
+            table.addCell(runReport.getAvgTime());
+            table.addCell(runReport.getAvgSpeed());
         }
 
         document.add(table);
