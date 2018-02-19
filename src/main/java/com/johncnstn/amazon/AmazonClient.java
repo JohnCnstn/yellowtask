@@ -1,6 +1,5 @@
 package com.johncnstn.amazon;
 
-import com.johncnstn.data.detail.CustomUserDetail;
 import com.johncnstn.data.entity.Image;
 import com.johncnstn.data.entity.User;
 import com.amazonaws.auth.AWSCredentials;
@@ -69,6 +68,12 @@ public class AmazonClient {
     private void uploadFileTos3bucket(String fileName, File file) {
         s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
+
+        Image image = new Image();
+        image.setImgURL(s3client.getUrl(bucketName, fileName));
+        image.setUser(userService.findOne(getPrincipal().getId()));
+
+        imageService.updloadNewImage(image);
     }
 
     public String uploadFile(MultipartFile multipartFile) {
@@ -78,13 +83,6 @@ public class AmazonClient {
             File file = convertMultiPartToFile(multipartFile);
             String fileName = generateFileName(multipartFile);
             fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
-
-            Image image = new Image();
-            image.setImgURL(fileUrl);
-            image.setUser(userService.findOne(getPrincipal().getId()));
-
-            imageService.updloadNewImage(image);
-
             uploadFileTos3bucket(fileName, file);
             file.delete();
         } catch (Exception e) {

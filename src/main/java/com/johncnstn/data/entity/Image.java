@@ -1,6 +1,6 @@
 package com.johncnstn.data.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.net.URL;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public class Image {
     @Column(name = "imgURL")
     @Setter
     @Getter
-    private String imgURL;
+    private URL imgURL;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
